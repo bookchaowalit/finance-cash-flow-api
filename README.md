@@ -30,5 +30,6 @@ npm install && railway config apply && railway up --ci --service cash-flow-api
 railway scale --service cash-flow-api asia-southeast1-eqsg3a=1 us-east4-eqdc4a=0   # next to Neon and the platform
 ```
 
-Railway variables: `CASH_FLOW_DB_MODE=hosted`, `CASH_FLOW_DB_URL_API`,
+Railway variables: `SENTRY_DSN` (error reporting; unset = off, see `src/cellkit/_sentry.py`),
+`CASH_FLOW_DB_MODE=hosted`, `CASH_FLOW_DB_URL_API`,
 `CASH_FLOW_JWT_PUBLIC_KEY_PEM`, `CASH_FLOW_JWT_ISSUER`, `EMPIRE_PLATFORM_URL`.
