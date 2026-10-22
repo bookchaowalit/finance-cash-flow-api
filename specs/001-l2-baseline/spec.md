@@ -82,6 +82,13 @@ Big Loop Plan Wave 2 (solo-empire `repository-catalog/roadmaps/BIG-LOOP-PLAN-202
 - **Then** the version becomes 2 on the change and stays the same on a patch that changes nothing; a stale `expected_version` gets 409
 - **Test:** `tests/test_cashflow_queries.py::test_activating_a_plan_bumps_its_version` · level: integration (API + throwaway PostgreSQL)
 
+### AC-08 — Numbers fit their columns
+
+- **Given** an int field (PostgreSQL integer) or a real field
+- **When** a client sends 2**31, or NaN / Infinity / 1e400 as raw JSON
+- **Then** the API answers 422 naming the field (before: a 500 from PostgreSQL, or the value silently stored as null)
+- **Test:** `tests/test_contract.py::test_numbers_fit_their_columns` · level: integration (API + throwaway PostgreSQL)
+
 ## 4. Interfaces and data
 
 | Interface | Change | Contract |
@@ -124,6 +131,7 @@ Big Loop Plan Wave 2 (solo-empire `repository-catalog/roadmaps/BIG-LOOP-PLAN-202
 | AC-05 | `tests/test_cashflow_defaults.py::test_expected_flows_default_to_zero_and_reserve_to_empty` | characterization (behaviour already present; passed on first run) | CI run of the pushed tip | none |
 | AC-06 | `tests/test_cashflow_queries.py::test_stats_refuse_a_field_that_is_not_a_filter` | characterization (behaviour already present; passed on first run) | CI run of the pushed tip | none |
 | AC-07 | `tests/test_cashflow_queries.py::test_activating_a_plan_bumps_its_version` | characterization (behaviour already present; passed on first run) | CI run of the pushed tip | none |
+| AC-08 | `tests/test_contract.py::test_numbers_fit_their_columns` | b6a9d2f · `.venv/bin/pytest -q -k numbers_fit` · `ValueError: Out of range float values are not JSON compliant: nan` | CI run of the pushed tip | none |
 
 ## 7. Risks and open questions
 
