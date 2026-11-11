@@ -79,7 +79,7 @@ def test_a_patch_that_changes_nothing_keeps_the_version(client, owner):
     same = client.patch(
         f"{CASHFLOW_PLANS}/{plan['id']}",
         headers=owner,
-        json={"name": "Stable", "expected_inflow": 50},
+        json={"name": "Stable", "expected_inflow": 50, "expected_version": 1},
     )
     assert same.status_code == 200, same.text
     assert same.json()["version"] == 1
@@ -114,7 +114,9 @@ def test_a_required_field_cannot_be_cleared(client, owner):
 def test_the_reserve_target_can_be_set_later(client, owner):
     plan = create(client, owner, name="Reserve later").json()
     updated = client.patch(
-        f"{CASHFLOW_PLANS}/{plan['id']}", headers=owner, json={"reserve_target": 900}
+        f"{CASHFLOW_PLANS}/{plan['id']}",
+        headers=owner,
+        json={"reserve_target": 900, "expected_version": 1},
     )
     assert updated.status_code == 200, updated.text
     assert updated.json()["reserve_target"] == "900.0000"
