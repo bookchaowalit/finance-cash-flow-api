@@ -3,12 +3,12 @@
 from cashflow_helpers import CASHFLOW_PLANS, create
 
 
-def test_list_filters_by_owner_scope(client, owner):
-    create(client, owner, name="Venture plan", owner_scope="venture")
-    create(client, owner, name="Client plan", owner_scope="client")
-    listed = client.get(CASHFLOW_PLANS, headers=owner, params={"owner_scope": "client"})
+def test_list_filters_by_scope(client, owner):
+    create(client, owner, name="Venture plan", scope="venture")
+    create(client, owner, name="Client plan", scope="client")
+    listed = client.get(CASHFLOW_PLANS, headers=owner, params={"scope": "client"})
     assert listed.status_code == 200, listed.text
-    scopes = {item["owner_scope"] for item in listed.json()["items"]}
+    scopes = {item["scope"] for item in listed.json()["items"]}
     assert scopes == {"client"}
 
 
@@ -48,10 +48,10 @@ def test_stats_count_plans_per_status(client, owner):
     assert groups["active"] >= 1
 
 
-def test_stats_count_plans_per_owner_scope(client, owner):
-    create(client, owner, name="Shared plan", owner_scope="shared")
+def test_stats_count_plans_per_scope(client, owner):
+    create(client, owner, name="Shared plan", scope="shared")
     stats = client.get(
-        f"{CASHFLOW_PLANS}/stats", headers=owner, params={"group_by": "owner_scope"}
+        f"{CASHFLOW_PLANS}/stats", headers=owner, params={"group_by": "scope"}
     )
     assert stats.status_code == 200, stats.text
     assert stats.json()["groups"]["shared"] == 1
@@ -100,7 +100,7 @@ def test_a_negative_amount_is_refused_on_update(client, owner):
     path = f"{CASHFLOW_PLANS}/{plan['id']}"
     refused = client.patch(path, headers=owner, json={"expected_outflow": -5})
     assert refused.status_code == 422
-    assert client.get(path, headers=owner).json()["expected_outflow"] == 75
+    assert client.get(path, headers=owner).json()["expected_outflow"] == "75.0000"
 
 
 def test_a_required_field_cannot_be_cleared(client, owner):
@@ -117,7 +117,7 @@ def test_the_reserve_target_can_be_set_later(client, owner):
         f"{CASHFLOW_PLANS}/{plan['id']}", headers=owner, json={"reserve_target": 900}
     )
     assert updated.status_code == 200, updated.text
-    assert updated.json()["reserve_target"] == 900
+    assert updated.json()["reserve_target"] == "900.0000"
     assert updated.json()["version"] == 2
 
 

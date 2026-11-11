@@ -1,13 +1,13 @@
 # Cash flow cell: one of the ten finance services split from the retired finance_* tables (2026-10-12).
 # Expected inflow, outflow and reserve per period.
-# Amounts are real (float) like every kit cell; cross-cell ids (account_id, ...) are plain bigints, not foreign keys.
+# Amounts are exact (money = numeric(19,4), decimal = numeric(30,10); SPEC-003); cross-cell ids (account_id, ...) are plain bigints, not foreign keys.
 cell: cash-flow
 title: Cash flow
 resources:
   cashflow-plan:
     table: cashflow_plans
     filters:
-    - owner_scope
+    - scope
     - status
     ranges:
     - [period_start, period_end]
@@ -16,15 +16,10 @@ resources:
         type: text
         required: true
         max_length: 200
-      owner_scope:
-        type: enum
-        values:
-        - personal
-        - solo_empire
-        - venture
-        - client
-        - shared
-        default: solo_empire
+      scope:
+        type: text
+        max_length: 64
+        default: ''
       period_start:
         type: date
         required: true
@@ -32,20 +27,19 @@ resources:
         type: date
         required: true
       expected_inflow:
-        type: real
+        type: money
         min: 0
         default: 0
       expected_outflow:
-        type: real
+        type: money
         min: 0
         default: 0
       reserve_target:
-        type: real
+        type: money
         min: 0
       currency:
-        type: text
+        type: currency
         default: THB
-        max_length: 12
       status:
         type: enum
         values:

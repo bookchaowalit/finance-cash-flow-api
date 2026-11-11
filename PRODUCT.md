@@ -17,7 +17,7 @@ api
 ## Product Purpose
 
 The list of expected cash movement per period: for each period, the money expected to come in, the
-money expected to go out and the reserve to keep, per owner scope, with the plan's status (draft,
+money expected to go out and the reserve to keep, per scope label, with the plan's status (draft,
 active, closed, cancelled). It holds the plan only; real movements live in
 `finance-transactions-api`.
 
@@ -41,12 +41,16 @@ workspace-scoped, so the same service can serve other tenants without code chang
 
 ## Capabilities and Constraints
 
-- `/v1/cashflow-plans`: list (filters `owner_scope`, `status`; ordered by id), stats (grouped by
+- SPEC-003: amounts are exact `money` (`numeric(19,4)`) and quantities, unit prices and rates are
+  `decimal` (`numeric(30,10)`); both are JSON strings in responses (`"1234.5600"`). Currency fields
+  are ISO 4217 codes (three upper-case letters). `scope` is a free label the workspace defines (at
+  most 64 characters, default empty).
+- `/v1/cashflow-plans`: list (filters `scope`, `status`; ordered by id), stats (grouped by
   one of those filters), get, get-by-legacy-id, create (with `Idempotency-Key`), patch (with
   `expected_version`), delete.
 - Rules: `name` (at most 200 characters), `period_start` and `period_end` are required;
   `expected_inflow` and `expected_outflow` default to 0 and `reserve_target` is empty by default;
-  none of the three can be negative (zero is allowed); `owner_scope` (default `solo_empire`) and
+  none of the three can be negative (zero is allowed); `scope` (default empty) and
   `status` (default `draft`) are fixed enums; `currency` defaults to THB and has at most 12
   characters; `period_end` cannot be before `period_start`, on create or on update (422
   `invalid_value` naming both fields; the same day for both is allowed).
@@ -58,6 +62,6 @@ workspace-scoped, so the same service can serve other tenants without code chang
 
 Proposed (nothing collects them yet):
 
-- Whether the current month has an active plan, per owner scope.
+- Whether the current month has an active plan, per scope label.
 - Gap between expected and actual net flow for closed plans (needs `finance-transactions-api`).
 - 5xx rate and p95 latency on `/v1/cashflow-plans` (Sentry and uptime worker).

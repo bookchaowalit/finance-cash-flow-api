@@ -18,7 +18,7 @@ Every resource has list, stats, get, get-by-legacy-id, create, patch and delete
 
 | Path | Resource | Filters |
 |---|---|---|
-| `/v1/cashflow-plans` | cashflow-plan | `owner_scope`, `status` |
+| `/v1/cashflow-plans` | cashflow-plan | `scope`, `status` |
 
 ## Develop and operate
 
