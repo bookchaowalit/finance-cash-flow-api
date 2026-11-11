@@ -5,6 +5,8 @@ cell: cash-flow
 title: Cash flow
 resources:
   cashflow-plan:
+    # SPEC-005: reference data only in events (no amounts, names or notes).
+    graph: [scope, period_start, period_end, currency, status]
     legacy_columns:
       scope: owner_scope
     table: cashflow_plans
