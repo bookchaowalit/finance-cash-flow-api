@@ -5,6 +5,8 @@ cell: cash-flow
 title: Cash flow
 resources:
   cashflow-plan:
+    legacy_columns:
+      scope: owner_scope
     table: cashflow_plans
     filters:
     - scope
