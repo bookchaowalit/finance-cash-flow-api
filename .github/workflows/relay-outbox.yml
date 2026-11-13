@@ -50,6 +50,11 @@ jobs:
           CASH_FLOW_KAFKA_CA_PEM: ${{ secrets.CASH_FLOW_KAFKA_CA_PEM }}
           CASH_FLOW_KAFKA_USERNAME: ${{ secrets.CASH_FLOW_KAFKA_USERNAME }}
           CASH_FLOW_KAFKA_PASSWORD: ${{ secrets.CASH_FLOW_KAFKA_PASSWORD }}
+          # SPEC-002 signed events: the signing seed is a secret; the pinned public keys and the
+          # mode (off/report/enforce) are repository variables. Unset = unsigned, unchecked.
+          CASH_FLOW_EVENT_SIGNING_KEY: ${{ secrets.CASH_FLOW_EVENT_SIGNING_KEY }}
+          CASH_FLOW_EVENT_KEYS: ${{ vars.CASH_FLOW_EVENT_KEYS }}
+          CASH_FLOW_EVENT_SIGNATURES: ${{ vars.CASH_FLOW_EVENT_SIGNATURES }}
         run: |
           set +e
           .venv/bin/cash-flow-relay > "$RUNNER_TEMP/relay.json" 2> "$RUNNER_TEMP/relay.err"
